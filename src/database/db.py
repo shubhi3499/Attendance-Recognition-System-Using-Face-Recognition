@@ -30,5 +30,11 @@ def teacher_login(username,password):
 
 
 
+def get_all_students():
+    response = supabase.table('students').select("*").execute()
+    return response.data
+
+
+
 
 
