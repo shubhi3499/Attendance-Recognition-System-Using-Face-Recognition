@@ -6,7 +6,7 @@ def hash_pass(pwd):
     return bcrypt.hashpw(pwd.encode(),bcrypt.gensalt()).decode()
 
 def check_pass(pwd,hashed):
-    return bcrypt.checkpwd(pwd.encode(),hashed.code())
+    return bcrypt.checkpw(pwd.encode(),hashed.encode())
 
 
 def check_teacher_exists(username):
