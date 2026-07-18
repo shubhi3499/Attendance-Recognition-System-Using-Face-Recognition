@@ -1,7 +1,7 @@
 import dlib
 import numpy as np
 import face_recognition_models
-from sklean.svm import SVC
+from sklearn.svm import SVC
 import streamlit as st
 from src.database.db import get_all_students
 
@@ -17,7 +17,7 @@ def load_dlib_models():
 
 
     facerec = dlib.face_recognition_model_v1(
-        face_recognition_models.pose_predictor_model_location()
+        face_recognition_models.face_recognition_model_location()
     )
 
 
@@ -65,7 +65,7 @@ def get_trained_model():
         clf.fit(X,y)
     except ValueError:
         pass   
-    return {'clf':clf,'X':x,'y':y}
+    return {'clf':clf,'X':X,'y':y}
 
 
 def train_classifier():
