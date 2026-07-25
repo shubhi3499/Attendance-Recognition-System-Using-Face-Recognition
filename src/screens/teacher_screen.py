@@ -17,7 +17,67 @@ def teacher_screen():
 
 def teacher_dashboard():
     teacher_data = st.session_state.teacher_data
-    st.header(f"""Welcome,{teacher_data['name']}""")
+    c1,c2 = st.columns(2,vertical_alignment='center',gap='xxlarge')
+    with c1:
+        header_dashboard()
+    with c2:
+        st.subheader(f"""Welcome,{teacher_data['name']}""")
+        if st.button('Logout',type='secondary',key='loginbackbtn',shortcut="control+backspace"):
+            st.session_state['is_logged_in'] = False
+            del st.session_state.teacher_data
+            st.rerun()
+
+    st.space()
+
+    if "current_teacher_tab" not in st.session_state:
+        st.session_state.current_teacher_tab = 'take_attendance'
+    tab1,tab2,tab3 = st.columns(3)
+
+    with tab1:
+        type1 = "primary" if st.session_state.current_teacher_tab == 'take_attendance' else "tertiary"
+        if st.button("Take attendance",type=type1,width='stretch',icon=':material/ar_on_you:'):
+            st.session_state.current_teacher_tab = 'take_attendance'
+            st.rerun()
+    with tab2:
+        type2 = "primary" if st.session_state.current_teacher_tab == 'manage_subjects' else "tertiary"
+        if st.button("Manage Subjects",type = type2,width='stretch',icon=':material/book_ribbon:'):
+            st.session_state.current_teacher_tab = 'manage_subjects'
+            st.rerun()
+    with tab3:
+        type3 = "primary" if st.session_state.current_teacher_tab == 'attendance_records' else "tertiary"
+        if st.button("Attendance Records",type=type3,width='stretch',icon=':material/cards_stack:'):
+            st.session_state.current_teacher_tab = 'attendance_records'
+            st.rerun()
+
+    st.divider()
+
+    if st.session_state.current_teacher_tab == 'take_attendance':
+        teacher_tab_take_attendance()
+    if st.session_state.current_teacher_tab == 'manage_subjects':
+        teacher_tab_manage_subjects()
+    if st.session_state.current_teacher_tab == 'attendance_records':
+        teacher_tab_attendance_records()
+
+    
+
+
+# Teacher tab take Attendnace Component
+def teacher_tab_take_attendance():
+    st.header('Take AI attendance')
+
+# Teacher tab to manage subjects
+def teacher_tab_manage_subjects():
+    st.header('Manage Subjects')
+
+#Teacher tab for attendance records
+def  teacher_tab_attendance_records():
+    st.header('Attendance Records')
+
+
+
+    
+    
+
 
 def login_teacher(username,password):
     if not username or not password:
@@ -33,7 +93,7 @@ def login_teacher(username,password):
 
 
 def teacher_screen_login():
-    c1,c2 = st.columns(2,vertical_alignment='center',gap='large')
+    c1,c2 = st.columns(2,vertical_alignment='center',gap='xxlarge')
     with c1:
         header_dashboard()
     with c2:
