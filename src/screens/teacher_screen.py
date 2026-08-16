@@ -5,7 +5,7 @@ from src.database.db import check_teacher_exists,create_teacher,teacher_login,ge
 from src.components.dialog_create_subject import create_subject_dialog
 from src.components.subject_card import subject_card
 from src.components.dialog_share_subject import share_subject_dialog
-
+from src.components.dialog_add_photo import add_photo_dialog
 def teacher_screen():
     style_background_dashboard()
     style_base_layout()
@@ -66,7 +66,31 @@ def teacher_dashboard():
 
 # Teacher tab take Attendnace Component
 def teacher_tab_take_attendance():
+    teacher_id = st.session_state.teacher_data['teacher_id']
     st.header('Take AI attendance')
+
+    if 'attendance_images' not in st.session_state:
+        st.session_state.attendance_images = []
+
+    subjects = get_teacher_subjects(teacher_id)
+
+    if not subjects:
+        st.warning('You havent created any subject create one to begin')
+        return
+    
+    subject_options = {f"{s['name']} - {s['subject_code']}" : s['subject_id'] for s in subjects}
+
+    col1,col2 = st.columns([3,1])
+
+    with col1:
+        selected_subject_label = st.selectbox('Select Subject',options=list(subject_options.keys()))
+    with col2:
+        if st.button('Add Photos',type='primary', icon = ':material/photo_prints:',width='stretch'):
+            add_photo_dialog()
+    selected_subject_id = subject_options[selected_subject_label]
+    st.divider()
+            
+
 
 # Teacher tab to manage subjects
 def teacher_tab_manage_subjects():
@@ -88,7 +112,7 @@ def teacher_tab_manage_subjects():
             ]
         def share_btn():
             if st.button(f"Share Code : {sub['name']}",key=f"share_{sub['subject_code']}",icon=":material/share:"):
-                share_subject_dialog(sub['name'],sub['subject_code'])
+                share_subject_dialog(sub['subject_code'], sub['name'])
             st.space()
         subject_card(
             name=sub['name'],
